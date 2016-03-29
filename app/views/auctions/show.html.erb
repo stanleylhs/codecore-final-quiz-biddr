@@ -1,0 +1,58 @@
+<%- model_class = Auction -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<div class="label label-default"><%= @auction.aasm_state %></div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
+  <dd><%= @auction.title %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:details) %>:</strong></dt>
+  <dd><%= @auction.details %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:user_full_name) %>:</strong></dt>
+  <dd><%= @auction.user_full_name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:ends_on) %>:</strong></dt>
+  <dd><%= @auction.ends_on %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:reserve_price) %>:</strong></dt>
+  <dd id="reserve-price-text"><%= @auction.reserve_price_text %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:current_price) %>:</strong></dt>
+  <dd id="current-price"><%= @auction.current_price > 0 ? @auction.current_price : "No bid yet." %></dd>
+</dl>
+
+<% unless current_user == @auction.user %>
+  <h2>Add Your Bid</h2>
+  <div id="bid-form"> 
+    <%= form_tag auction_bids_path(@auction) do %>
+      $<%= text_field_tag :price, nil, placeholder: 'Enter bid price' %>
+      <%= submit_tag "Bid" %>
+    <% end %>
+  </div>
+<% end %>
+
+<h2>Bid History</h2>
+<ul>
+<div id="bids">
+<% @auction.bids.order('created_at DESC').each do |bid| %>
+  <li>
+    <%= "$#{bid.price} at #{bid.formatted_bid_time} by #{bid.user_full_name}" %>
+  </li>
+<% end %>
+</div>
+</ul>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              auctions_path, :class => 'btn btn-default'  %>
+<% if (can? :manage, @auction) && @auction.draft? %>
+  <%= link_to "Publish", auction_auction_publishings_path(@auction),
+              method: :post,
+              class: "btn btn-primary",
+              data: {confirm: "Are you sure? You won't be able to edit the auction after it's published."} %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                edit_auction_path(@auction), :class => 'btn btn-default' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                auction_path(@auction),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-danger' %>
+<% end %>

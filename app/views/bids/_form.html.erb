@@ -1,0 +1,12 @@
+<%= simple_form_for @bid, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :price %>
+  <%= error_span(@bid[:price]) %>
+  <%= f.input :user_id %>
+  <%= error_span(@bid[:user_id]) %>
+  <%= f.input :auction_id %>
+  <%= error_span(@bid[:auction_id]) %>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                bids_path, :class => 'btn btn-default' %>
+<% end %>
