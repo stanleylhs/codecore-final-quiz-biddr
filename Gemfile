@@ -54,7 +54,11 @@ group :development, :test do
   gem 'pry-remote'
 
   gem 'capybara'
+  gem 'launchy'
+
   gem 'quiet_assets'
+
+  gem 'rack_session_access'
 end
 
 group :development do

@@ -24,7 +24,7 @@ RSpec.describe AuctionsController, type: :controller do
   # Auction. As you add validations to Auction, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    attributes_for(:auction)
+    attributes_for(:auction, {user_id: user.id})
   }
 
   let(:invalid_attributes) {

@@ -72,33 +72,27 @@ RSpec.describe BidsController, type: :controller do
     context "with valid params" do
       it "creates a new Bid" do
         expect {
-          post :create, {:auction_id => auction, :bid => valid_attributes}, { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
+          post :create, {:auction_id => auction, :bid => valid_attributes}, valid_session
         }.to change(Bid, :count).by(1)
       end
 
-      it "assigns a newly created bid as @bid" do
-        post :create, {:bid => valid_attributes}, valid_session
-        expect(assigns(:bid)).to be_a(Bid)
-        expect(assigns(:bid)).to be_persisted
-      end
-
-      it "redirects to the created bid" do
-        post :create, {:bid => valid_attributes}, valid_session
-        expect(response).to redirect_to(Bid.last)
+      it "redirects to the auction" do
+        post :create, {:auction_id => auction, :bid => valid_attributes}, valid_session
+        expect(response).to redirect_to(Bid.last.auction)
       end
     end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved bid as @bid" do
-        post :create, {:bid => invalid_attributes}, valid_session
-        expect(assigns(:bid)).to be_a_new(Bid)
-      end
+    # context "with invalid params" do
+    #   it "assigns a newly created but unsaved bid as @bid" do
+    #     post :create, {:bid => invalid_attributes}, valid_session
+    #     expect(assigns(:bid)).to be_a_new(Bid)
+    #   end
 
-      it "re-renders the 'new' template" do
-        post :create, {:bid => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
-    end
+    #   it "re-renders the 'new' template" do
+    #     post :create, {:bid => invalid_attributes}, valid_session
+    #     expect(response).to render_template("new")
+    #   end
+    # end
   end
 
   # describe "PUT #update" do
